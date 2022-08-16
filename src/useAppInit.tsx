@@ -18,7 +18,8 @@ export const useAppInit = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState({ name: "Pembrey!!!" });
+  const [data, setData] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
     const getMetOfficeData = async () => {
@@ -28,7 +29,7 @@ export const useAppInit = () => {
         if (!response.ok) {
           setHasError(true);
           setIsLoading(false);
-          // todo setErrorBoundry
+          // todo setErrorBoundary
           // throw Error(response.status);
         } else {
           // let siteData;
@@ -41,11 +42,11 @@ export const useAppInit = () => {
             setHasError(false);
           } else {
             setHasError(true);
-            // todo setErrorBoundry
+            // todo setErrorBoundary
           }
         }
       } catch (error) {
-        // todo setErrorBoundry
+        // todo setErrorBoundary
         console.log("error :>> ", error);
         if (error instanceof Error) {
           // ✅ TypeScript knows err is Error
@@ -60,6 +61,8 @@ export const useAppInit = () => {
     getMetOfficeData();
   }, []);
   // }, [setIsLoading, setHasError, setData, hasError]);
+
+  // console.log("data.name :>> ", data.name);
 
   return [isLoading, hasError, data, errorMsg] as const;
 };
