@@ -1,8 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { useAppInit } from "./useAppInit";
 
 function App() {
+  const [loading, hasError, data, errorMsg] = useAppInit();
+  console.log("loading :>> ", loading);
+  console.log("hasError :>> ", hasError);
+  console.log("data :>> ", data);
+  console.log("errorMsg :>> ", errorMsg);
+
   return (
     <div className="App">
       <header className="App-header">
