@@ -1,65 +1,43 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { useAppInit } from "./useAppInit";
+import Header from "./components/header";
+import { ErrorContainer } from "./components/Toolkit";
 import { LiveWind } from "./components/LiveWind";
 
 // interface data {
 //   name?: string;
 // }
 
-function App() {
+const App = () => {
   const [isLoading, hasError, data, errorMsg] = useAppInit();
-  console.log("loading :>> ", isLoading);
-  console.log("hasError :>> ", hasError);
-  console.log("data :>> ", data);
-  console.log("errorMsg :>> ", errorMsg);
-
-  if (hasError) {
-    return (
-      <>
-        <div>Something went wrong ...</div>
-      </>
-    );
-  } else if (isLoading) {
-    return (
-      <>
-        <div>Loading ...</div>
-      </>
-    );
-  } else if (!hasError && !isLoading && data) {
-    return (
-      <>
-        <div className="App">
-          <h2>{data.name}</h2>
-          <h2>{data.country}</h2>
-
-          <h2>some magic happens !</h2>
-          <LiveWind data={data} />
-          {/* <LiveWind /> */}
-        </div>
-      </>
-    );
-  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="App">
+        <Header
+        // style={{ width: "100vw", height: "10vh" }}
+        />
+        {isLoading || hasError ? (
+          <ErrorContainer className="text-warning justify-content-center">
+            {isLoading && <div>Loading...</div>}
+            {hasError && <div>{`hasError!!! - ${errorMsg}`}</div>}
+          </ErrorContainer>
+        ) : (
+          ""
+        )}
+        {!hasError && !isLoading && data && (
+          <>
+            {/* // todo - display the day and date */}
+            <h2>{data.name}</h2>
+            <h2>{data.country}</h2>
+            <h2>some magic happens !</h2>
+            <LiveWind data={data} />
+            {/* <LiveWind /> */}
+          </>
+        )}
+      </div>
+    </>
   );
-}
+};
 
 export default App;

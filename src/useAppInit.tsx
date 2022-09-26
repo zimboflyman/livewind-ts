@@ -42,6 +42,9 @@ export const useAppInit = () => {
             setHasError(false);
           } else {
             setHasError(true);
+            setErrorMsg(
+              "Error getting data from the metOffice! - Location is not in json.SteRep.DV"
+            );
             // todo setErrorBoundary
           }
         }
