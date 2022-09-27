@@ -14,7 +14,7 @@ const windUrl =
   // Pembrey
   `http://datapoint.metoffice.gov.uk/public/data/val/wxobs/all/json/03605?res=hourly&key=${fob}`;
 
-export const useAppInit = () => {
+export const useDataFetch = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -63,7 +63,6 @@ export const useAppInit = () => {
     };
     getMetOfficeData();
   }, []);
-  // }, [setIsLoading, setHasError, setData, hasError]);
 
   // console.log("data.name :>> ", data.name);
 
