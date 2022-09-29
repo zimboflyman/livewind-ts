@@ -1,4 +1,5 @@
-import ReactECharts from "echarts-for-react";
+// import echarts from "echarts";
+import ReactEcharts from "echarts-for-react";
 
 export const LiveWind = ({ last24HrData }: any) => {
   type graphDataType = {
@@ -27,7 +28,7 @@ export const LiveWind = ({ last24HrData }: any) => {
     time: number;
     windSpeed: string;
     R: string;
-    waveHeight: number;
+    temp: number;
   };
 
   // const { period } = data;
@@ -46,9 +47,7 @@ export const LiveWind = ({ last24HrData }: any) => {
   if (last24HrData?.length === 2) {
     // we have both yesterday and todays data
     dataYesterday = last24HrData[0].Rep;
-    console.log("dataYesterday", dataYesterday);
     dataToday = last24HrData[1].Rep;
-    console.log("dataToday", dataToday);
     graphData = dataYesterday?.concat(dataToday);
   } else if (last24HrData?.length === 1) {
     graphData = last24HrData[0].Rep;
@@ -69,243 +68,291 @@ export const LiveWind = ({ last24HrData }: any) => {
       time: item.$ / 60,
       windSpeed: (item.S / 1.15078).toFixed(1),
       R: item.D,
-      waveHeight: item.T,
+      temp: item.T,
       // gust: (item.G / 1.15078).toFixed(1),
     }));
-    console.log("simple Data >>", simpleData);
+  }
+  console.log("simple Data >>", simpleData);
 
-    latestReading.push(simpleData[simpleData.length - 1]);
-    console.log("latestReading :>> ", latestReading);
+  latestReading.push(simpleData[simpleData.length - 1]);
+  console.log("latestReading :>> ", latestReading);
 
-    // const directionMap = {};
-    // // prettier-ignore
-    // ['W', 'WSW', 'SW', 'SSW', 'S', 'SSE', 'SE', 'ESE', 'E', 'ENE', 'NE', 'NNE', 'N', 'NNW', 'NW', 'WNW'].forEach(function (name, index) {
-    //     directionMap[name] = Math.PI / 8 * index;
-    // });
+  // const directionMap = {};
+  // // prettier-ignore
+  // ['W', 'WSW', 'SW', 'SSW', 'S', 'SSE', 'SE', 'ESE', 'E', 'ENE', 'NE', 'NNE', 'N', 'NNW', 'NW', 'WNW'].forEach(function (name, index) {
+  //     directionMap[name] = Math.PI / 8 * index;
+  // });
 
-    const dims = {
-      time: 0,
-      windSpeed: 1,
-      R: 2,
-      waveHeight: 3,
-    };
-    // const arrowSize = 18;
-
-    // const renderArrow = function (param, api) {
-    //   const point = api.coord([
-    //     api.value(dims.time),
-    //     api.value(dims.windSpeed),
-    //   ]);
-    //   return {
-    //     type: "path",
-    //     shape: {
-    //       pathData: "M31 16l-15-15v9h-26v12h26v9z",
-    //       x: -arrowSize / 2,
-    //       y: -arrowSize / 2,
-    //       width: arrowSize,
-    //       height: arrowSize,
-    //     },
-    //     rotation: directionMap[api.value(dims.R)],
-    //     position: point,
-    //     style: api.style({
-    //       stroke: "#555",
-    //       lineWidth: 1,
-    //     }),
-    //   };
-    // };
-
-    const options = {
-      title: {
-        text: "wind chart",
-        subtext: "www.seabreeze.com.au",
-        left: "center",
+  const rawData = {
+    data: [
+      {
+        time: "2017-06-27T11:00:00.000Z",
+        windSpeed: 9,
+        R: "NNW",
+        waveHeight: 2.64,
       },
-      // tooltip: {
-      //   trigger: "axis",
-      //   formatter: function (params) {
-      //     return [
-      //       echarts.format.formatTime(
-      //         "yyyy-MM-dd",
-      //         params[0].value[dims.time]
-      //       ) +
-      //         " " +
-      //         echarts.format.formatTime("hh:mm", params[0].value[dims.time]),
-      //       "风速：" + params[0].value[dims.windSpeed],
-      //       "风向：" + params[0].value[dims.R],
-      //       "浪高：" + params[0].value[dims.waveHeight],
-      //     ].join("<br>");
-      //   },
-      // },
-      grid: {
-        top: 160,
-        bottom: 125,
+      {
+        time: "2017-06-27T12:30:00.000Z",
+        windSpeed: 10,
+        R: "NNW",
+        waveHeight: 2.57,
       },
-      xAxis: {
-        type: "time",
-        maxInterval: 3600 * 1000 * 24,
+      {
+        time: "2017-06-27T14:00:00.000Z",
+        windSpeed: 12,
+        R: "NNW",
+        waveHeight: 2.49,
+      },
+      {
+        time: "2017-06-27T15:30:00.000Z",
+        windSpeed: 12,
+        R: "NNW",
+        waveHeight: 2.44,
+      },
+      {
+        time: "2017-06-27T17:00:00.000Z",
+        windSpeed: 11,
+        R: "NNW",
+        waveHeight: 2.38,
+      },
+    ],
+  };
+
+  const testData = simpleData.map(function (entry) {
+    return [entry.time, entry.windSpeed, entry.R, entry.temp];
+  });
+
+  console.log("testData :>> ", testData);
+
+  const dims = {
+    time: 0,
+    windSpeed: 1,
+    R: 2,
+    temp: 3,
+  };
+  // const arrowSize = 18;
+
+  // const renderArrow = function (param, api) {
+  //   const point = api.coord([
+  //     api.value(dims.time),
+  //     api.value(dims.windSpeed),
+  //   ]);
+  //   return {
+  //     type: "path",
+  //     shape: {
+  //       pathData: "M31 16l-15-15v9h-26v12h26v9z",
+  //       x: -arrowSize / 2,
+  //       y: -arrowSize / 2,
+  //       width: arrowSize,
+  //       height: arrowSize,
+  //     },
+  //     rotation: directionMap[api.value(dims.R)],
+  //     position: point,
+  //     style: api.style({
+  //       stroke: "#555",
+  //       lineWidth: 1,
+  //     }),
+  //   };
+  // };
+
+  const options = {
+    title: {
+      text: "wind chart",
+      subtext: "www.seabreeze.com.au",
+      left: "center",
+    },
+    // tooltip: {
+    //   trigger: "axis",
+    //   formatter: function (params) {
+    //     return [
+    //       echarts.format.formatTime(
+    //         "yyyy-MM-dd",
+    //         params[0].value[dims.time]
+    //       ) +
+    //         " " +
+    //         echarts.format.formatTime("hh:mm", params[0].value[dims.time]),
+    //       "风速：" + params[0].value[dims.windSpeed],
+    //       "风向：" + params[0].value[dims.R],
+    //       "浪高：" + params[0].value[dims.temp],
+    //     ].join("<br>");
+    //   },
+    // },
+    grid: {
+      top: 160,
+      bottom: 125,
+    },
+    xAxis: {
+      type: "time",
+      maxInterval: 3600 * 1000 * 24,
+      splitLine: {
+        lineStyle: {
+          color: "#ddd",
+        },
+      },
+    },
+    yAxis: [
+      {
+        name: "Wind",
+        nameLocation: "middle",
+        nameGap: 35,
+        axisLine: {
+          lineStyle: {
+            color: "#666",
+          },
+        },
         splitLine: {
           lineStyle: {
             color: "#ddd",
           },
         },
       },
-      yAxis: [
-        {
-          name: "Wind",
-          nameLocation: "middle",
-          nameGap: 35,
-          axisLine: {
-            lineStyle: {
-              color: "#666",
-            },
-          },
-          splitLine: {
-            lineStyle: {
-              color: "#ddd",
-            },
+      {
+        name: "Temp",
+        nameLocation: "middle",
+        nameGap: 35,
+        // max: 6,
+        axisLine: {
+          lineStyle: {
+            color: "#015DD5",
           },
         },
-        {
-          name: "Wind",
-          nameLocation: "middle",
-          nameGap: 35,
-          max: 6,
-          axisLine: {
-            lineStyle: {
-              color: "#015DD5",
-            },
+        splitLine: { show: false },
+      },
+      {
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { show: false },
+        splitLine: { show: false },
+      },
+    ],
+    // visualMap: {
+    //   type: "piecewise",
+    //   // show: false,
+    //   orient: "horizontal",
+    //   left: "center",
+    //   bottom: 10,
+    //   pieces: [
+    //     {
+    //       gte: 17,
+    //       color: "#18BF12",
+    //       label: "大风（>=17节）",
+    //     },
+    //     {
+    //       gte: 11,
+    //       lt: 17,
+    //       color: "#f4e9a3",
+    //       label: "中风（11  ~ 17 节）",
+    //     },
+    //     {
+    //       lt: 11,
+    //       color: "#D33C3E",
+    //       label: "微风（小于 11 节）",
+    //     },
+    //   ],
+    //   seriesIndex: 1,
+    //   dimension: 1,
+    // },
+    // dataZoom: [
+    //   {
+    //     type: "inside",
+    //     xAxisIndex: 0,
+    //     minSpan: 5,
+    //   },
+    //   {
+    //     type: "slider",
+    //     xAxisIndex: 0,
+    //     minSpan: 5,
+    //     bottom: 50,
+    //   },
+    // ],
+    series: [
+      {
+        type: "line",
+        yAxisIndex: 1,
+        showSymbol: false,
+        emphasis: {
+          scale: false,
+        },
+        symbolSize: 10,
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            global: false,
+            colorStops: [
+              {
+                offset: 0,
+                color: "rgba(88,160,253,1)", //top
+              },
+              {
+                offset: 0.5,
+                color: "rgba(88,160,253,0.7)", //middle
+              },
+              {
+                offset: 1,
+                color: "rgba(88,160,253,0)", //bottom
+              },
+            ],
           },
-          splitLine: { show: false },
         },
-        {
-          axisLine: { show: false },
-          axisTick: { show: false },
-          axisLabel: { show: false },
-          splitLine: { show: false },
+        lineStyle: {
+          color: "rgba(88,160,253,1)",
         },
-      ],
-      // visualMap: {
-      //   type: "piecewise",
-      //   // show: false,
-      //   orient: "horizontal",
-      //   left: "center",
-      //   bottom: 10,
-      //   pieces: [
-      //     {
-      //       gte: 17,
-      //       color: "#18BF12",
-      //       label: "大风（>=17节）",
-      //     },
-      //     {
-      //       gte: 11,
-      //       lt: 17,
-      //       color: "#f4e9a3",
-      //       label: "中风（11  ~ 17 节）",
-      //     },
-      //     {
-      //       lt: 11,
-      //       color: "#D33C3E",
-      //       label: "微风（小于 11 节）",
-      //     },
-      //   ],
-      //   seriesIndex: 1,
-      //   dimension: 1,
+        itemStyle: {
+          color: "rgba(88,160,253,1)",
+        },
+        encode: {
+          x: dims.time,
+          y: dims.temp,
+        },
+        data: testData,
+        z: 2,
+      },
+      // {
+      //   type: "custom",
+      //   renderItem: renderArrow,
+      //   encode: {
+      //     x: dims.time,
+      //     y: dims.windSpeed,
+      //   },
+      //   data: data,
+      //   z: 10,
       // },
-      // dataZoom: [
-      //   {
-      //     type: "inside",
-      //     xAxisIndex: 0,
-      //     minSpan: 5,
-      //   },
-      //   {
-      //     type: "slider",
-      //     xAxisIndex: 0,
-      //     minSpan: 5,
-      //     bottom: 50,
-      //   },
-      // ],
-      series: [
-        {
-          type: "line",
-          yAxisIndex: 1,
-          showSymbol: false,
-          emphasis: {
-            scale: false,
-          },
-          symbolSize: 10,
-          areaStyle: {
-            color: {
-              type: "linear",
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              global: false,
-              colorStops: [
-                {
-                  offset: 0,
-                  color: "rgba(88,160,253,1)",
-                },
-                {
-                  offset: 0.5,
-                  color: "rgba(88,160,253,0.7)",
-                },
-                {
-                  offset: 1,
-                  color: "rgba(88,160,253,0)",
-                },
-              ],
-            },
-          },
-          lineStyle: {
-            color: "rgba(88,160,253,1)",
-          },
-          itemStyle: {
-            color: "rgba(88,160,253,1)",
-          },
-          encode: {
-            x: dims.time,
-            y: dims.waveHeight,
-          },
-          data: simpleData,
-          z: 2,
+      {
+        type: "line",
+        symbol: "none",
+        encode: {
+          x: dims.time,
+          y: dims.windSpeed,
         },
-        // {
-        //   type: "custom",
-        //   renderItem: renderArrow,
-        //   encode: {
-        //     x: dims.time,
-        //     y: dims.windSpeed,
-        //   },
-        //   data: data,
-        //   z: 10,
-        // },
-        {
-          type: "line",
-          symbol: "none",
-          encode: {
-            x: dims.time,
-            y: dims.windSpeed,
-          },
-          lineStyle: {
-            color: "#aaa",
-            type: "dotted",
-          },
-          data: simpleData,
-          z: 1,
+        lineStyle: {
+          color: "#aaa",
+          type: "dotted",
         },
-      ],
-    };
+        data: testData,
+        z: 1,
+      },
+    ],
+  };
 
-    return (
-      <>
-        <ReactECharts option={options} />
-      </>
-    );
-  } else {
-    //use error component / boundary
-    return <h5>'error'</h5>;
-  }
+  return (
+    <>
+      <ReactEcharts
+        style={{
+          height: "600px",
+          width: "100%",
+        }}
+        option={options}
+      />
+    </>
+  );
+  // } else {
+  //   //use error component / boundary
+  //   return <h5>'error'</h5>;
+  // }
 };
 
 // export default LiveWind;
